@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml;
 using Application;
 using Entities;
@@ -163,8 +164,7 @@ public sealed class BankProvider : IBankProvider
         while (executionAttempt <= 14)
         {
             var requestUri = $"{_bankApi.Value.BankOfCanada}?start_date={date.ToString("O")}&end_date={date.ToString("O")}";
-            var serializeOptions = new JsonSerializerOptions { Converters = { new BankOfCanadaConverter() } };
-            var response = await _httpClient.GetFromJsonAsync<BankOfCanadaResponse>(requestUri, serializeOptions, cancellationToken);
+            var response = await _httpClient.GetFromJsonAsync<BankOfCanadaResponse>(requestUri, InfrastructureJsonSerializerContext.Default.BankOfCanadaResponse, cancellationToken);
 
             if (response?.Observations.FirstOrDefault()?.Value is not null)
                 return response.Observations
@@ -245,3 +245,7 @@ public sealed class BankProvider : IBankProvider
         }
     }
 }
+
+[JsonSourceGenerationOptions(DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, Converters = [ typeof(BankOfCanadaConverter) ])]
+[JsonSerializable(typeof(BankOfCanadaResponse))]
+internal partial class InfrastructureJsonSerializerContext : JsonSerializerContext;

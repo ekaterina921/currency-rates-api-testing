@@ -23,5 +23,8 @@ app.AddEndpoints();
 app.Run();
 
 [JsonSourceGenerationOptions(DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
-[JsonSerializable(typeof(CurrencyRate))]
+[JsonSerializable(typeof(SupportedResponse))]
+[JsonSerializable(typeof(ErrorResponse))]
+[JsonSerializable(typeof(InternalErrorResponse))]
+[JsonSerializable(typeof(CurrencyRate[]))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext;
