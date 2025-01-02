@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using Application;
 using Entities;
-using Entities.Configurations;
 using Infrastructure;
 using Web;
 
