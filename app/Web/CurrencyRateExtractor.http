@@ -1,0 +1,3 @@
+@CurrencyRateExtractor_HostAddress = http://localhost:8080
+###
+GET {{CurrencyRateExtractor_HostAddress}}/rates/EUR/2024-12-09
