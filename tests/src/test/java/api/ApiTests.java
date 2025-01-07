@@ -16,12 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Testcontainers(parallel = true)
 public class ApiTests {
     private final static Network mainNetwork = Network.newNetwork();
-    private final static int appPort = 8080;
-    private final static int mainDBPort = 27017;
-    private final static int logsDBPort = 27037;
+    private final static int APP_PORT = 8080;
+    private final static int MAIN_DB_PORT = 27017;
+    private final static int LOGS_DB_PORT = 27037;
     static String appHost;
     static String mainDBHost;
     static String logsDBHost;
+    static int appPort1;
 
     @Container
     private final static GenericContainer<?> appContainer = new GenericContainer<>("currency-rate-extractor:latest")
@@ -29,19 +30,19 @@ public class ApiTests {
             .withEnv("MongoCluster:BaseUrl", "mongodb://host.docker.internal:27017/")
             .withEnv("MongoCluster:UserName", "MainUser")
             .withEnv("MongoCluster:Password", "Test123!")
-            .withEnv("MongoLog:BaseUrl", "mongodb://host.docker.internal:27017/")
+            .withEnv("MongoLog:BaseUrl", "mongodb://host.docker.internal:27037/")
             .withEnv("MongoLog:UserName", "MainUser")
             .withEnv("MongoLog:Password", "Test123!")
             .withNetwork(mainNetwork)
-            .withExposedPorts(appPort);
+            .withExposedPorts(APP_PORT);
     @Container
     private final static MongoDBContainer databaseStorageContainer = new MongoDBContainer("mongo:latest")
             .withNetwork(mainNetwork)
-            .withExposedPorts(mainDBPort);
+            .withExposedPorts(MAIN_DB_PORT);
     @Container
     private final static MongoDBContainer databaseLogsContainer = new MongoDBContainer("mongo:latest")
             .withNetwork(mainNetwork)
-            .withExposedPorts(logsDBPort);
+            .withExposedPorts(LOGS_DB_PORT);
 
     @BeforeAll
     public static void init() {
@@ -51,6 +52,7 @@ public class ApiTests {
         appHost = appContainer.getHost();
         mainDBHost = databaseStorageContainer.getHost();
         logsDBHost = databaseLogsContainer.getHost();
+        appPort1 = appContainer.getFirstMappedPort();
     }
 
     @AfterAll
@@ -71,8 +73,8 @@ public class ApiTests {
     }
 
     @Test
-    public void supportedCurrencyEndpointTest(){
-        String pathToGet = "http://" + appHost + ":" + appPort + "/supported-currency";
+    public void supportedCurrencyEndpointTest() {
+        String pathToGet = "http://" + appHost + ":" + appPort1 + "/supported-currency";
         given()
                 .when()
                 .get(pathToGet)
