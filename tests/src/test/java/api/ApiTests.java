@@ -8,14 +8,21 @@ import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers(parallel = true)
 public class ApiTests {
     private final static Network mainNetwork = Network.newNetwork();
+    private final static int appPort = 8080;
     private final static int mainDBPort = 27017;
     private final static int logsDBPort = 27037;
+    static String appHost;
+    static String mainDBHost;
+    static String logsDBHost;
+
     @Container
     private final static GenericContainer<?> appContainer = new GenericContainer<>("currency-rate-extractor:latest")
             .withEnv("ASPNETCORE_URLS", "http://*:8080")
@@ -26,7 +33,7 @@ public class ApiTests {
             .withEnv("MongoLog:UserName", "MainUser")
             .withEnv("MongoLog:Password", "Test123!")
             .withNetwork(mainNetwork)
-            .withExposedPorts(8080);
+            .withExposedPorts(appPort);
     @Container
     private final static MongoDBContainer databaseStorageContainer = new MongoDBContainer("mongo:latest")
             .withNetwork(mainNetwork)
@@ -41,6 +48,9 @@ public class ApiTests {
         appContainer.start();
         databaseStorageContainer.start();
         databaseLogsContainer.start();
+        appHost = appContainer.getHost();
+        mainDBHost = databaseStorageContainer.getHost();
+        logsDBHost = databaseLogsContainer.getHost();
     }
 
     @AfterAll
@@ -52,13 +62,23 @@ public class ApiTests {
 
 
     @Test
-    public void containersSetupTest() throws InterruptedException {
-        Thread.sleep(35000);
+    public void containersSetupTest() {
         assertAll(
                 () -> assertTrue(appContainer.isRunning(), "App container should be running"),
                 () -> assertTrue(databaseStorageContainer.isRunning(), "DB storage container should be running"),
                 () -> assertTrue(databaseLogsContainer.isRunning(), "Logs storage container should be running")
         );
+    }
+
+    @Test
+    public void supportedCurrencyEndpointTest(){
+        String pathToGet = "http://" + appHost + ":" + appPort + "/supported-currency";
+        given()
+                .when()
+                .get(pathToGet)
+                .then()
+                .assertThat()
+                .statusCode(200);
     }
 
 }
