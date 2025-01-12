@@ -37,9 +37,6 @@ public class ApiTests extends BaseTestStartEnd {
         var response = given()
                 .when()
                 .get(pathToGet);
-
-        var response1 = given()
-                .when()
-                .get(pathToGet);
+        response.then().assertThat().statusCode(200);
     }
 }
