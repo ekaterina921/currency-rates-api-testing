@@ -27,11 +27,15 @@ public class BaseTestStartEnd {
     @Container
     final static MongoDBContainer databaseStorageContainer = new MongoDBContainer("mongo:latest")
             .withNetwork(mainNetwork)
-            .withExposedPorts(MAIN_DB_PORT);
+            .withExposedPorts(MAIN_DB_PORT)
+            .withEnv("UserName", "MainUser")
+            .withEnv("Password", "Test123!");
     @Container
     final static MongoDBContainer databaseLogsContainer = new MongoDBContainer("mongo:latest")
             .withNetwork(mainNetwork)
-            .withExposedPorts(LOGS_DB_PORT);
+            .withExposedPorts(LOGS_DB_PORT)
+            .withEnv("UserName", "MainUser")
+            .withEnv("Password", "Test123!");
 
     @BeforeAll
     public static void init() {
