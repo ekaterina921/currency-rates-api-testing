@@ -4,6 +4,7 @@ title: |
   Test plan for Currency rates application
 ---
 
+# Test plan for Currency rates application
 **Key tester: Katsiaryna Makarava**
 
 **Key developer: Ivan Pavlov**
@@ -11,7 +12,7 @@ title: |
 **  
 **
 
-# 1. Introduction {#introduction}
+# 1. Introduction
 
 ## Objective:
 
@@ -49,11 +50,11 @@ automation activities.
 
 ## Out-of-Scope
 
-> The Out-of-Scope section identifies functionalities and aspects that
-> will not be included in the current phase of test automation. This is
-> to manage expectations, avoid scope creep, and focus the team's
-> efforts on high-priority tasks. Items in this section may be revisited
-> in future phases as the application evolves.
+The Out-of-Scope section identifies functionalities and aspects that
+will not be included in the current phase of test automation. This is
+to manage expectations, avoid scope creep, and focus the team's
+efforts on high-priority tasks. Items in this section may be revisited
+in future phases as the application evolves.
 
 <table>
 <colgroup>
@@ -63,78 +64,78 @@ automation activities.
 </colgroup>
 <thead>
 <tr class="header">
-<th><blockquote>
+<th>
 <p>Feature</p>
-</blockquote></th>
-<th><blockquote>
+</th>
+<th>
 <p>Reason for Exclusion</p>
-</blockquote></th>
-<th><blockquote>
+</th>
+<th>
 <p>Revisit Timeline</p>
-</blockquote></th>
+</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><blockquote>
+<td>
 <p>Performance Testing</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Performance testing requires specialized tools and expertise, not
 currently planned.</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Later phases, if needed</p>
-</blockquote></td>
+</td>
 </tr>
 <tr class="even">
-<td><blockquote>
+<td>
 <p>Manual Testing</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Focus is on automation, and manual testing is handled outside the
 scope of this plan.</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>N/A</p>
-</blockquote></td>
+</td>
 </tr>
 <tr class="odd">
-<td><blockquote>
+<td>
 <p>Cross-Browser Testing</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Testing the application's compatibility across multiple browsers is
 not included at this stage. Only Google Chrome (latest build) is in
 scope, as it holds the highest market share among browsers.</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Phase 2</p>
-</blockquote></td>
+</td>
 </tr>
 <tr class="even">
-<td><blockquote>
+<td>
 <p>Mobile Testing for Web UI</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Mobile responsiveness testing is postponed until after desktop Web UI
 is automated.</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Phase 2</p>
-</blockquote></td>
+</td>
 </tr>
 <tr class="odd">
-<td><blockquote>
+<td>
 <p>Security Testing</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Requires additional tools and expertise beyond the current team’s
 focus.</p>
-</blockquote></td>
-<td><blockquote>
+</td>
+<td>
 <p>Later phases, if needed</p>
-</blockquote></td>
+</td>
 </tr>
 </tbody>
 </table>
@@ -157,17 +158,17 @@ The test automation aims to achieve the following objectives:
     ensuring accurate currency rate retrieval and consistent behavior
     across the priority scenarios.
 
-3.  **Support Web UI Testing**  
-    Develop and maintain automation scripts for the Web UI to ensure
-    seamless integration with backend services and a smooth user
-    experience.
-
-4.  **Deliver Reusable and Scalable Test Scripts**  
+3.  **Deliver Reusable and Scalable Test Scripts**  
     Build an automation framework with reusable components that can be
     easily extended to accommodate future features and scaled for
     broader testing needs.
 
-# 3. Team Roles and Responsibilities {#team-roles-and-responsibilities}
+4.  **Support Web UI Testing**  
+    Develop and maintain automation scripts for the Web UI to ensure
+    seamless integration with backend services and a smooth user
+    experience.
+
+# 3. Team Roles and Responsibilities
 
 This section describes the roles and responsibilities of the team
 members involved in the test automation initiative. Clear task
@@ -194,9 +195,9 @@ accountability for achieving the project goals.
 UI.</td>
 <td>- IDEs: IntelliJ (for test code), VS Code (for application
 code)<br />
-- Test automation tools: Junit5, RestAssured, Selenium,
-Testcontainers<br />
-- .Net for application code; Java for test code</td>
+- Test automation tools: Testcontainers, Junit5, RestAssured, Selenium
+<br />
+- .Net (9.0.101) for application code; Java (Open JDK 23.0.1) for test code</td>
 </tr>
 <tr class="even">
 <td>Write and maintain test deliverables, including the test plan, bug
@@ -242,7 +243,7 @@ environments.</td>
 </tbody>
 </table>
 
-# 5. Test Automation Tools and Frameworks {#test-automation-tools-and-frameworks}
+# 5. Test Automation Tools and Frameworks
 
 This section outlines the tools and frameworks that will be used to
 develop and execute the test automation suite for the application. The
@@ -255,6 +256,7 @@ efficient testing and maintainability.
 |------------------------------|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------|
 | IntelliJ IDEA                | Java IDE used for editing and executing test cases.                                    | Key tester uses it for editing test cases. Developer views test code. |
 | VS Code                      | Lightweight code editor for viewing application code.                                  | Key tester uses it to view application code.                          |
+| JetBrains Rider              | All-in-one IDE for developers working with the entire .NET technology stack.           | Key tester uses it to view application code.                          |
 | Postman                      | API testing tool for exploratory testing before automating test cases.                 | Used for manual testing and exploring API responses.                  |
 | MongoDB Compass              | GUI tool for interacting with MongoDB.                                                 | Used for exploratory testing and inspecting data in MongoDB.          |
 | RestAssured                  | API testing framework for RESTful services in Java.                                    | Used to write and execute API tests for currency rate endpoints.      |
@@ -266,7 +268,7 @@ efficient testing and maintainability.
 | Maven                        | Build automation tool for Java projects.                                               | Used to build the project, including tests, and manage dependencies.  |
 | Maven surefire report plugin | Maven plugin to render reports from .xml to web interface version (HTML format).       | Used to create test reports.                                          |
 
-# 6. Test Data Management {#test-data-management}
+# 6. Test Data Management
 
 The management of test data is a key part of the test automation
 strategy. Given that the application does not handle sensitive data, the
@@ -344,7 +346,7 @@ in isolated containers.
       machines, using Docker to start and manage the necessary
       containers during the test execution.
 
-# 8. Test Case Design {#test-case-design}
+# 8. Test Case Design
 
 This section details the approach for designing automated test cases to
 ensure comprehensive coverage of application functionality. Test cases
@@ -439,7 +441,7 @@ development lifecycle.
 
 ## Triggering Mechanism
 
-- Test execution will be manual for the time being, requiring testers or
+- Test execution triggering will be manual for the time being, requiring testers or
   developers to initiate the test suite for API and UI tests.
 
 - In the future, the plan may evolve to incorporate automated triggering
@@ -449,7 +451,7 @@ development lifecycle.
 ## Environment Requirements
 
 - Both API and UI tests will be executed in the local test environment
-  using Docker containers managed by Testcontainers.
+  using Docker containers managed by Testcontainers. The required tools should be installed
 
 ## Execution Frequency
 
@@ -463,7 +465,7 @@ development lifecycle.
   issues promptly. Failed tests will be analyzed, and any identified
   bugs will be reported to the developer for resolution.
 
-# 10. Defect Management {#defect-management}
+# 10. Defect Management
 
 This section outlines the process and tools used to identify, report,
 track, and resolve defects discovered during testing.
@@ -515,7 +517,7 @@ track, and resolve defects discovered during testing.
       - **Closed**: The defect has been fixed and verified by the
         tester.
 
-    - If the defect is not resolved during retesting, the status will be
+    - If during retesting it is found out that the defect is not resolved, the status will be
       updated back to **In Progress** for further investigation.
 
 3.  **Defect Communication**
@@ -543,7 +545,7 @@ track, and resolve defects discovered during testing.
     - A link to the screenshot(s) will be included in the defect entry
       in the GitHub text file.
 
-# 11. Metrics and Reporting {#metrics-and-reporting}
+# 11. Metrics and Reporting
 
 This section outlines the reporting approach and key metrics that will
 be tracked to assess the quality and effectiveness of the test
@@ -579,18 +581,18 @@ process. These metrics provide actionable insights for optimizing test
 coverage, improving defect management, and ensuring the stability of the
 test suite.
 
-| **Metric**              | **Explanation**                                                                                              | **Calculation**                                                                                     | **Target Value**                                                                    |
-|-------------------------|--------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| **Test Execution Time** | Measures the time taken to execute the test suite, helping identify bottlenecks and inefficiencies.          | Total time taken from the start to the end of test suite execution.                                 | [Execution time within acceptable range (e.g., ≤ 10 minutes for API tests).]{.mark} |
-| **Pass Rate**           | Indicates the percentage of test cases that pass, ensuring the stability and correctness of the application. | PassRate(Pass Rate (%) = (Number of Passed Tests / Total Executed Tests) × 100                      | ≥ 95% for stable builds.                                                            |
-| **Defect Reopen Rate**  | Tracks the percentage of defects reopened after being marked as resolved, highlighting the quality of fixes. | DefectReopenRate(Defect Reopen Rate (%) = (Number of Reopened Defects / Total Closed Defects) × 100 | ≤ 5%.                                                                               |
-| **Test Case Coverage**  | Measures the proportion of application features covered by automated tests, ensuring adequate testing scope. | Coverage(Coverage (%) = (Number of Features Tested / Total Features) × 100                          | ≥ 90%.                                                                              |
-| **Test Stability**      | Indicates the reliability of tests by measuring the percentage of consistently passing tests.                | Stability(Stability (%) = (Stable Tests / Total Tests) × 100                                        | ≥ 95%.                                                                              |
+| **Metric**              | **Explanation**                                                                                              | **Calculation**                                                                                     | **Target Value**                                                           |
+|-------------------------|--------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| **Test Execution Time** | Measures the time taken to execute the test suite, helping identify bottlenecks and inefficiencies.          | Total time taken from the start to the end of test suite execution.                                 | Execution time within acceptable range (e.g., ≤ 10 minutes for API tests). |
+| **Pass Rate**           | Indicates the percentage of test cases that pass, ensuring the stability and correctness of the application. | PassRate(Pass Rate (%) = (Number of Passed Tests / Total Executed Tests) × 100                      | ≥ 95% for stable builds.                                                   |
+| **Defect Reopen Rate**  | Tracks the percentage of defects reopened after being marked as resolved, highlighting the quality of fixes. | DefectReopenRate(Defect Reopen Rate (%) = (Number of Reopened Defects / Total Closed Defects) × 100 | ≤ 5%.                                                                      |
+| **Test Case Coverage**  | Measures the proportion of application features covered by automated tests, ensuring adequate testing scope. | Coverage(Coverage (%) = (Number of Features Tested / Total Features) × 100                          | ≥ 90%.                                                                     |
+| **Test Stability**      | Indicates the reliability of tests by measuring the percentage of consistently passing tests.                | Stability(Stability (%) = (Stable Tests / Total Tests) × 100                                        | ≥ 95%.                                                                     |
 
 By tracking these metrics, the team can ensure the test automation
 process remains efficient, reliable, and aligned with project goals.
 
-# 12. Risk Management {#risk-management}
+# 12. Risk Management
 
 This section identifies potential risks that could impact the test
 automation process and outlines strategies to mitigate them. Each risk
@@ -609,7 +611,7 @@ is assessed based on its **probability**, **severity**, and overall
 
 | Risk Name                      | Probability (1--10) | Severity (1--5) | Likelihood (P × S) | Symptom                                                                      | Mitigation Plan                                                                                            | Contingency Plan                                                           |
 |--------------------------------|---------------------|-----------------|--------------------|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
-| Environment Setup Challenges   | 5                   | 2               | 10                 | Delays in setting up Docker containers or Testcontainers.                    | Allocate time for environment setup testing; create detailed setup documentation.                          | Seek support from online communities or the Testcontainers library team.   |
+| Environment Setup Challenges   | 7                   | 4               | 28                 | Delays in setting up Docker containers or Testcontainers.                    | Allocate time for environment setup testing; create detailed setup documentation.                          | Seek support from online communities or the Testcontainers library team.   |
 | Test Data Limitations          | 8                   | 3               | 24                 | Tests fail due to inconsistent or insufficient test data.                    | Predefine reusable test data files; automate runtime data creation and cleanup.                            | Manually review and adjust test data to resolve issues.                    |
 | API Changes                    | 4                   | 1               | 4                  | Tests fail after unexpected changes to bank APIs.                            | Regularly monitor API documentation for updates; version-control API endpoints.                            | Update test cases promptly to align with the new API changes.              |
 | Flaky Tests                    | 5                   | 3               | 15                 | Tests fail intermittently due to timing issues or external dependencies.     | Add appropriate waits; isolate flaky tests; improve synchronization mechanisms.                            | Investigate failures, disable flaky tests temporarily, and rework them.    |
@@ -620,13 +622,12 @@ is assessed based on its **probability**, **severity**, and overall
 | No Dedicated CI/CD Integration | 3                   | 4               | 12                 | Delays in triggering test executions.                                        | Create a clear process for manual test execution and scheduling.                                           | Gradually move towards CI/CD integration as resources allow.               |
 | Priority Misalignment          | 6                   | 3               | 18                 | Delays in test automation due to conflicting development priorities.         | Regularly sync with the developer to align priorities; define clear goals for automation efforts.          | Escalate priorities to management or stakeholders for resolution.          |
 
-\*
 
 This format provides clear quantitative assessments of the risks and
 ensures a structured approach to mitigating and managing them. Let me
 know if any further refinements are needed!
 
-# 13. Test Deliverables {#test-deliverables}
+# 13. Test Deliverables
 
 This section outlines the key deliverables that will be produced as part
 of the test automation process. These deliverables ensure transparency,
@@ -678,7 +679,7 @@ These deliverables will collectively support the development and
 maintenance of a robust and effective test automation process while
 ensuring that quality objectives are met.
 
-# 14. Timeline and Milestones {#timeline-and-milestones}
+# 14. Timeline and Milestones
 
 This section describes the key milestones and estimated timelines for
 the test automation process. These milestones provide a structured
