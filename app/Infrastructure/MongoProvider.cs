@@ -19,9 +19,6 @@ public sealed class MongoProvider
         _mongoDatabase = new MongoClient(url).GetDatabase(options.Value.CurrencyDataBaseName);
     }
 
-    internal IMongoCollection<CurrencyRateRecord> GetCurrencyCollection(string code)
-    {
-        return _mongoDatabase
-            .GetCollection<CurrencyRateRecord>(code);
-    }
+    internal IMongoCollection<CurrencyRateRecord> GetCurrencyCollection(string code) => 
+        _mongoDatabase.GetCollection<CurrencyRateRecord>(code);
 }

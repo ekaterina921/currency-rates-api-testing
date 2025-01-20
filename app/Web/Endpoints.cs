@@ -1,5 +1,4 @@
 ﻿using Application;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web;
@@ -9,7 +8,7 @@ public static class Endpoints
     public static void AddEndpoints(this WebApplication app)
     {
         app.MapGet("/rates/{currencyCode}/{date}",
-                async (string currencyCode, DateOnly date,
+                async (string currencyCode, DateOnly date, HttpContext ctx,
                     [FromServices] CurrencyRateExtractor currencyRateExtractor, CancellationToken ct) =>
                 {
                     var result = await currencyRateExtractor.GetRate(currencyCode, date, ct);
@@ -20,19 +19,6 @@ public static class Endpoints
                         operationFailed => Results.InternalServerError()
                     );
                 })
-            .AddEndpointFilter(async (context, next) =>
-            {
-                try
-                {
-                    return await next(context);
-                }
-                catch (Exception exception)
-                {
-                    app.Logger.LogError(exception, "Unhandled exception");
-                    var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
-                    return Results.InternalServerError(new InternalErrorResponse(activity?.Id));
-                }
-            })
             .AddEndpointFilter(async (context, next) =>
             {
                 var date = context.GetArgument<DateOnly>(1);

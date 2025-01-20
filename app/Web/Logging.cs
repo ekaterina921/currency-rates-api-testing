@@ -2,7 +2,6 @@
 using MongoDB.Driver;
 using Serilog;
 using Serilog.Events;
-using RollingInterval = Serilog.Sinks.MongoDB.RollingInterval;
 
 namespace Web;
 
@@ -10,7 +9,7 @@ public static class Logging
 {
     public static void AddSeriLogConfiguration(this WebApplicationBuilder builder)
     {
-        var connectionStr = builder.Configuration.GetSection(MongoLogCfg.Section).Get<MongoLogCfg>()
+        var logCfg = builder.Configuration.GetSection(MongoLogCfg.Section).Get<MongoLogCfg>()
                             ?? throw new Exception("Cannot get configuration to MongoDbLog");
 
         builder.Logging.ClearProviders();
@@ -25,18 +24,18 @@ public static class Logging
             .Enrich.WithActivityId()
             .Enrich.WithProperty("application-name", "currency-rate")
             .WriteTo.Console()
-            .WriteTo.File("logs/system-log.txt", rollingInterval: Serilog.RollingInterval.Day)
+            .WriteTo.File("logs/system-log.txt", rollingInterval: RollingInterval.Day)
             .WriteTo.MongoDBBson(mongoLogCfg =>
             {
-                var url = new MongoUrlBuilder(connectionStr.BaseUrl)
+                var url = new MongoUrlBuilder(logCfg.BaseUrl)
                 {
-                    Username = connectionStr.UserName,
-                    Password = connectionStr.Password,
+                    Username = logCfg.UserName,
+                    Password = logCfg.Password,
                 }.ToMongoUrl();
-                var mongoDbInstance = new MongoClient(url).GetDatabase("Logging");
-		
+                var mongoDbInstance = new MongoClient(url).GetDatabase(logCfg.CurrencyDataBaseName);
+		    
                 mongoLogCfg.SetMongoDatabase(mongoDbInstance);
-                mongoLogCfg.SetRollingInternal(RollingInterval.Month);
+                mongoLogCfg.SetRollingInternal(Serilog.Sinks.MongoDB.RollingInterval.Day);
             })
             .Filter.ByExcluding($"RequestPath like '/{Constants.HealthCheckPath}%'"));
 
