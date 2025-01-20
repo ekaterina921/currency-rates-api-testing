@@ -451,7 +451,7 @@ development lifecycle.
 ## Environment Requirements
 
 - Both API and UI tests will be executed in the local test environment
-  using Docker containers managed by Testcontainers. The required tools should be installed
+  using Docker containers managed by Testcontainers. The required tools should be installed: OpenJDK 23.0.1, Docker Desktop, Intellij IDEA 
 
 ## Execution Frequency
 
