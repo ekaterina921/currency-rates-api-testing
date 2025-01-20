@@ -5,6 +5,8 @@ using Infrastructure;
 using Web;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+builder.Services.AddProblemDetails();
+
 builder.AddSeriLogConfiguration();
 builder.AddOptions();
 builder.AddApplication();
@@ -17,6 +19,10 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 app.UseSerilogConfiguration();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+
 app.AddEndpoints();
 
 app.Run();
