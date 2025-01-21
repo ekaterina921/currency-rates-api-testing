@@ -1,6 +1,9 @@
 package api;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.given;
@@ -21,32 +24,20 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
 
     @Test
     public void TestSupportedCurrenciesEndpoint() {
-        String pathToGet = "http://" + appHost + ":" + appPort1 + "/supported-currency";
         given()
                 .when()
-                .get(pathToGet)
+                .get(SUPPORTED_CURRENCIES_ENDPOINT)
                 .then()
                 .assertThat()
                 .statusCode(200);
     }
 
-    @Test
-    public void TestSupportedCurrencyEndpointPositive() {
-        String pathToGet = "http://" + appHost + ":" + appPort1 + "/supported-currency/EUR";
+    @ParameterizedTest
+    @CsvFileSource(resources = "SupportedCurrencies.csv")
+    public void TestSupportedCurrencyEndpointPositive(String currencyCode) {
         given()
                 .when()
-                .get(pathToGet)
-                .then()
-                .assertThat()
-                .statusCode(200);
-    }
-
-    @Test
-    public void TestSupportedCurrencyEndpointNegative(){
-        String pathToGet = "http://" + appHost + ":" + appPort1 + "/supported-currency/RSD";
-        given()
-                .when()
-                .get(pathToGet)
+                .get(SUPPORTED_CURRENCY_ENDPOINT, currencyCode)
                 .then()
                 .assertThat()
                 .statusCode(200);
@@ -55,27 +46,9 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
 
     @Test
     public void TestGetCurrencyEndpointPositive() {
-        String pathToGet = "http://" + appHost + ":" + appPort1 + "/rates/EUR/2024-12-12";
         var response = given()
                 .when()
-                .get(pathToGet);
-        response.then().assertThat().statusCode(200);
-    }
-
-    @Test
-    public void TestGetCurrencyEndpointUnsupportedCurrency(){
-        String pathToGet = "http://" + appHost + ":" + appPort1 + "/rates/RSD/2024-12-12";
-        var response = given()
-                .when()
-                .get(pathToGet);
-        response.then().assertThat().statusCode(200);
-    }
-    @Test
-    public void TestGetCurrencyEndpointNotPastDate(){
-        String pathToGet = "http://" + appHost + ":" + appPort1 + "/rates/EUR/2028-12-12";
-        var response = given()
-                .when()
-                .get(pathToGet);
+                .get(CURRENCY_RATES_ENDPOINT, "EUR", "2024-12-12");
         response.then().assertThat().statusCode(200);
     }
 }
