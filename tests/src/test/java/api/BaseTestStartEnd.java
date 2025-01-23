@@ -14,12 +14,11 @@ import java.util.List;
 public class BaseTestStartEnd {
     private final static Network mainNetwork = Network.newNetwork();
     private final static int APP_PORT = 8080;
-    private final static int MAIN_DB_PORT = 27017;
-    private final static int LOGS_DB_PORT = 27037;
+    private final static int DB_PORT = 27017;
     static String appHost;
     static String mainDBHost;
     static String logsDBHost;
-    static int appPort1;
+    static int appPort;
 
     static GenericContainer<?> appContainer = null;
 
@@ -29,7 +28,7 @@ public class BaseTestStartEnd {
             .withEnv("MONGO_INITDB_ROOT_USERNAME", "MainUser")
             .withEnv("MONGO_INITDB_ROOT_PASSWORD", "Test123!")
             .withEnv("MONGO_INITDB_DATABASE", "Logging")
-            .withExposedPorts(MAIN_DB_PORT);
+            .withExposedPorts(DB_PORT);
 
     @Container
     final static GenericContainer<?> mongoMainContainer = new GenericContainer<>("mongo:latest")
@@ -37,7 +36,7 @@ public class BaseTestStartEnd {
             .withEnv("MONGO_INITDB_ROOT_USERNAME", "MainUser")
             .withEnv("MONGO_INITDB_ROOT_PASSWORD", "Test123!")
             .withEnv("MONGO_INITDB_DATABASE", "CurrencyRates")
-            .withExposedPorts(LOGS_DB_PORT);
+            .withExposedPorts(DB_PORT);
 
     @BeforeAll
     public static void init() {
@@ -67,7 +66,7 @@ public class BaseTestStartEnd {
         appHost = appContainer.getHost();
         mainDBHost = mongoMainContainer.getHost();
         logsDBHost = mongoLogContainer.getHost();
-        appPort1 = appContainer.getFirstMappedPort();
+        appPort = appContainer.getFirstMappedPort();
     }
 
     @AfterAll

@@ -1,5 +1,6 @@
 package api;
 
+//import Utilities.Utils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -42,14 +43,15 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
         response.then().assertThat().statusCode(200);
     }
 
-    @Test
-    public void TestGetCurrencyEndpointYesterdaysDate() {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate yesterdayDate = currentDate.minusDays(1);
+    @ParameterizedTest
+    @CsvFileSource(resources = "SupportedCurrencies.csv")
+    public void TestGetCurrencyEndpointYesterdaysDate(String currencyCode) {
+//        LocalDate currentDate = LocalDate.now();
+//        LocalDate yesterdayDate = currentDate.minusDays(1);
 
         given()
                 .when()
-                .get(CURRENCY_RATES_ENDPOINT, "EUR", yesterdayDate.toString())
+                .get(CURRENCY_RATES_ENDPOINT, currencyCode, (new Utils()).getCurrentTimeAsString())
                 .then()
                 .assertThat().statusCode(200);
     }
