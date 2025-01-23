@@ -2,7 +2,7 @@
 
 ## Requirements
 The application is aimed at speeding up the processes of conversion into other currencies. The application extracts currency rates from the following Banks: Bank of Canada, European Central Bank (ECB) and Reserve Bank of Australia (RBA).
-The application is able to extract currency reates for EUR, USD and other currencies available via the above-mentioned banks' API.
+The application is able to extract currency rates for EUR, USD and other currencies available via the above-mentioned banks' API.
 The user should be able to preform the actions below:
 - view the supported currencies, 
 - review if the target currency is supported
@@ -32,5 +32,5 @@ I. Create docker image
 
 II. Run tests
 1. Make sure that Docker is started.
-1. Open currency-rates-testc -> tests folder in IntelliJ
+1. Open currency-rates-api-testing -> tests folder in IntelliJ
 1. Click Start button next to the ApiTests class (The environment will be started and stopped automatically. Latest Docker image of the application and an image of the latest version of MongoDB will be used to create the environment).
