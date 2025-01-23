@@ -2,7 +2,7 @@
 
 ## Requirements
 The application is aimed at speeding up the processes of conversion into other currencies. The application extracts currency rates from the following Banks: Bank of Canada, European Central Bank (ECB) and Reserve Bank of Australia (RBA).
-The application is able to extract currency rates for EUR, USD and other currencies available via the above-mentioned banks' API.
+The application is able to extract currency rates for EUR, USD, GBP, AUD, CAD available via the mentioned banks' API.
 The user should be able to preform the actions below:
 - view the supported currencies, 
 - review if the target currency is supported
