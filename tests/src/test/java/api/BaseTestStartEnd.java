@@ -9,6 +9,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
+import java.util.Map;
 
 @Testcontainers(parallel = true)
 public class BaseTestStartEnd {
@@ -25,51 +26,82 @@ public class BaseTestStartEnd {
     static GenericContainer<?> appContainer = null;
 
     @Container
-    final static MongoDBContainer databaseStorageContainer = new MongoDBContainer("mongo:latest")
+    final static GenericContainer<?> mongoLogContainer = new GenericContainer<>("mongo:latest")
             .withNetwork(mainNetwork)
-            .withExposedPorts(MAIN_DB_PORT)
-            .withEnv("UserName", "MainUser")
-            .withEnv("Password", "Test123!");
+            .withEnv("MONGO_INITDB_ROOT_USERNAME","MainUser")
+            .withEnv("MONGO_INITDB_ROOT_PASSWORD","Test123!")
+            .withEnv("MONGO_INITDB_DATABASE","Logging")
+            .withExposedPorts(27017);
+
     @Container
-    final static MongoDBContainer databaseLogsContainer = new MongoDBContainer("mongo:latest")
+    final static GenericContainer<?> mongoMainContainer = new GenericContainer<>("mongo:latest")
             .withNetwork(mainNetwork)
-            .withExposedPorts(LOGS_DB_PORT)
-            .withEnv("UserName", "MainUser")
-            .withEnv("Password", "Test123!");
+            .withEnv(Map.of("MONGO_INITDB_ROOT_USERNAME", "MainUser",
+                    "MONGO_INITDB_ROOT_PASSWORD", "Test123!",
+                    "MONGO_INITDB_DATABASE", "CurrencyRates"))
+            .withExposedPorts(27017);
+
+//    @Container
+//    final static MongoDBContainer databaseStorageContainer = new MongoDBContainer("mongo:latest")
+//            .withNetwork(mainNetwork)
+//            .withExposedPorts(MAIN_DB_PORT)
+//            .withEnv("UserName", "MainUser")
+//            .withEnv("Password", "Test123!");
+
+//    @Container
+//    final static MongoDBContainer databaseLogsContainer = new MongoDBContainer("mongo:latest")
+//            .withNetwork(mainNetwork)
+//            .withExposedPorts(LOGS_DB_PORT)
+//            .withEnv("UserName", "MainUser")
+//            .withEnv("Password", "Test123!");
 
     @BeforeAll
     public static void init() {
-        databaseStorageContainer.start();
-        databaseLogsContainer.start();
+        mongoLogContainer.setPortBindings(List.of("27037:27017"));
+        mongoLogContainer.start();
+
+        mongoMainContainer.setPortBindings(List.of("27017:27017"));
+        mongoMainContainer.start();
+
+//        databaseStorageContainer.start();
+//        databaseLogsContainer.start();
 
         appContainer = new GenericContainer<>("currency-rate-extractor:latest")
                 .withNetwork(mainNetwork)
                 .withExposedPorts(APP_PORT);
+//        databaseLogsContainer.setPortBindings(List.of("27037:27017"));
+//        databaseStorageContainer.setPortBindings(List.of("27017:27017"));
         var env = List.of(
-                String.format("MongoCluster:BaseUrl=mongodb://host.docker.internal:%d/", databaseStorageContainer.getFirstMappedPort()),
-                String.format("MongoLog:BaseUrl=mongodb://host.docker.internal:%d/", databaseLogsContainer.getFirstMappedPort()),
+                String.format("MongoCluster:BaseUrl=mongodb://host.docker.internal:%d/", mongoMainContainer.getFirstMappedPort()),
+                String.format("MongoLog:BaseUrl=mongodb://host.docker.internal:%d/", mongoLogContainer.getFirstMappedPort()),
                 String.format("ASPNETCORE_URLS=http://*:%d", APP_PORT),
                 "ASPNETCORE_ENVIRONMENT=Test",
-                "MongoCluster__UserName=MainUser",
-                "MongoCluster__Password=Test123!",
-                "MongoLog__UserName=MainUser",
-                "MongoLog__Password=Test123!"
+                "MongoCluster:UserName=MainUser",
+                "MongoCluster:Password=Test123!",
+                "MongoLog:UserName=MainUser",
+                "MongoLog:Password=Test123!"
         );
         appContainer.setEnv(env); // Override all .withEnv() methods.
         appContainer.setPortBindings(List.of("8080:8080"));
         appContainer.start();
 
         appHost = appContainer.getHost();
-        mainDBHost = databaseStorageContainer.getHost();
-        logsDBHost = databaseLogsContainer.getHost();
+        mainDBHost = mongoMainContainer.getHost();
+        logsDBHost = mongoLogContainer.getHost();
         appPort1 = appContainer.getFirstMappedPort();
+
+        var port = mongoLogContainer.getExposedPorts();
+        var port1 = mongoMainContainer.getExposedPorts();
     }
 
     @AfterAll
     public static void stopItAll() {
         appContainer.stop();
-        databaseStorageContainer.stop();
-        databaseLogsContainer.stop();
+        mongoMainContainer.stop();
+        mongoLogContainer.stop();
+
+//        databaseStorageContainer.stop();
+//        databaseLogsContainer.stop();
     }
 
 }
