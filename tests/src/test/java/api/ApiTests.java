@@ -12,7 +12,6 @@ import static io.restassured.RestAssured.given;
 @Testcontainers(parallel = true)
 public class ApiTests extends BaseTestStartEnd implements EndpointsList {
 
-
     @Test
     public void TestSupportedCurrenciesEndpoint() {
         given()
@@ -34,7 +33,6 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .statusCode(200);
     }
 
-
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrenciesWithPastDates.csv")
     public void TestGetCurrencyEndpointPositive(String currencyCode, String pastDate) {
@@ -45,14 +43,14 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     }
 
     @Test
-    public void TestGetCurrencyEndpointYesterdaysDate(){
+    public void TestGetCurrencyEndpointYesterdaysDate() {
         LocalDate currentDate = LocalDate.now();
         LocalDate yesterdayDate = currentDate.minusDays(1);
-        var response = given()
+
+        given()
                 .when()
-                .get(CURRENCY_RATES_ENDPOINT, "EUR", yesterdayDate.toString());
-        response.
-                then().
-                assertThat().statusCode(200);
-}
+                .get(CURRENCY_RATES_ENDPOINT, "EUR", yesterdayDate.toString())
+                .then()
+                .assertThat().statusCode(200);
     }
+}
