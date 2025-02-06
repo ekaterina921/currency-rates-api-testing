@@ -18,6 +18,10 @@ There are 3 endpoints:
 - MongoDB to store fetched currency rates (they are used to speed up the response in case of requesting the /rates/{currency-code}/{YYYY-MM-DD} endpoint more than once),
 - MongoDB to store logs (can be used for troubleshooting or collecting statistics)
 
+## Test plan
+Navigate to "tests" folder to view the test plan and API tests.
+Please note that the application code is written using .Net (9.0.101) while Java (OpenJDK 23.0.1) is used for tests.
+
 ## How to run tests on local machine
 Pre-conditions:
 Java (OpenJDK 23.0.1), Docker and IntelliJ IDEA are installed on the local machine.
