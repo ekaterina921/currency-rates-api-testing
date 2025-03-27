@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
 @Testcontainers(parallel = true)
@@ -21,7 +22,6 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify the list of supported currencies is displayed by Supported Currencies endpoint.")
     @Test
     public void TestSupportedCurrenciesEndpoint() {
-        String currencies = "USD, EUR, GBP, AUD, CAD";
         //Send request
         var response = given()
                 .when()
@@ -31,8 +31,8 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("size()", equalTo(5))
                 .body("", containsInAnyOrder("EUR", "USD", "GBP", "AUD", "CAD"));
+        // containsInAnyOrder tests that only supported currencies are returned in any order
     }
 
     @DisplayName("Verify that true is returned by Supported Currency endpoint in case the currency is supported")
@@ -79,8 +79,9 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
         response
                 .then()
                 .assertThat()
-                .statusCode(200);
-        //Validate MongoDB data
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
+        //Validate MongoDB data IS UNDER DEVELOPMENT
         MongoCollection<Document> collectionMain = mainDB.getCollection("log_" + (new Utils()).getTodaysDate());
         MongoCollection<Document> collectionLogs = logDB.getCollection("startup_log");
         System.out.println(collectionLogs);
@@ -102,6 +103,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
         response
                 .then()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
     }
 }
