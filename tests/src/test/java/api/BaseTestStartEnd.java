@@ -1,5 +1,9 @@
 package api;
 
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+import com.mongodb.reactivestreams.client.MongoDatabase;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -19,6 +23,13 @@ public class BaseTestStartEnd {
     static String mainDBHost;
     static String logsDBHost;
     static int appPort;
+    static String connectionStringMainContainer;
+    static String connectionStringLogContainer;
+    static MongoClient mongoClientMainDB;
+    static MongoClient mongoClientLogDB;
+    static MongoDatabase mainDB;
+    static MongoDatabase logDB;
+
 
     static GenericContainer<?> appContainer = null;
 
@@ -67,6 +78,13 @@ public class BaseTestStartEnd {
         mainDBHost = mongoMainContainer.getHost();
         logsDBHost = mongoLogContainer.getHost();
         appPort = appContainer.getFirstMappedPort();
+
+        connectionStringMainContainer = "mongodb://MainUser:Test123!@localhost:" + mongoMainContainer.getFirstMappedPort() + "/";
+        connectionStringLogContainer = "mongodb://MainUser:Test123!@localhost:" + mongoLogContainer.getFirstMappedPort() + "/";
+        mongoClientMainDB = MongoClients.create(connectionStringMainContainer);
+        mongoClientLogDB = MongoClients.create(connectionStringLogContainer);
+        mainDB = mongoClientMainDB.getDatabase("CurrencyRates");
+        logDB = mongoClientLogDB.getDatabase("Logging");
     }
 
     @AfterAll
