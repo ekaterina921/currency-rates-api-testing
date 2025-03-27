@@ -2,6 +2,7 @@ package api;
 
 import Utilities.Utils;
 
+import com.mongodb.reactivestreams.client.FindPublisher;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import org.bson.Document;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import reactor.core.publisher.Flux;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 @Testcontainers(parallel = true)
 public class ApiTests extends BaseTestStartEnd implements EndpointsList {
@@ -18,7 +21,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify the list of supported currencies is displayed by Supported Currencies endpoint.")
     @Test
     public void TestSupportedCurrenciesEndpoint() {
-
+        String currencies = "USD, EUR, GBP, AUD, CAD";
         //Send request
         var response = given()
                 .when()
@@ -27,7 +30,9 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
         response
                 .then()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(200)
+                .body("size()", equalTo(5))
+                .body("", containsInAnyOrder("EUR", "USD", "GBP", "AUD", "CAD"));
     }
 
     @DisplayName("Verify that true is returned by Supported Currency endpoint in case the currency is supported")
@@ -42,7 +47,24 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
         response
                 .then()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(200)
+                .body("isSupported", equalTo(true));
+    }
+
+    @DisplayName("Verify that false is returned by Supported Currency endpoint in case the currency is not supported")
+    @ParameterizedTest
+    @CsvFileSource(resources = "NotSupportedCurrencies.csv")
+    public void TestSupportedCurrencyEndpointNegative(String currencyCode) {
+        //Send request
+        var response = given()
+                .when()
+                .get(SUPPORTED_CURRENCY_ENDPOINT, currencyCode);
+        //Validate response
+        response
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("isSupported", equalTo(false));
     }
 
     @DisplayName("Verify that Supported Currencies With Past Dates endpoint returns the list of currency rates and saves to DB")
@@ -58,12 +80,13 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .then()
                 .assertThat()
                 .statusCode(200);
-//        MongoCollection<Document> collectionMain = mainDB.getCollection("log_" + (new Utils()).getTodaysDate());
-//        MongoCollection<Document> collectionLogs = logDB.getCollection("startup_log");
-//        FindIterable<Document> mainDoc = collectionMain.find();
-////        for (Document doc : mainDoc) {
-////            System.out.println(doc.toJson());
-////        }
+        //Validate MongoDB data
+        MongoCollection<Document> collectionMain = mainDB.getCollection("log_" + (new Utils()).getTodaysDate());
+        MongoCollection<Document> collectionLogs = logDB.getCollection("startup_log");
+        System.out.println(collectionLogs);
+        FindPublisher<Document> mainDoc = collectionMain.find();
+        Flux.from(mainDoc)
+                .doOnNext(x -> System.out.println("done"));
 //        FindIterable<Document> logs = collectionLogs.find();
     }
 
