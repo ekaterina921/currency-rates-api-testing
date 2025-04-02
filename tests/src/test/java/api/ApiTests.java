@@ -5,12 +5,17 @@ import Utilities.Utils;
 import com.mongodb.reactivestreams.client.FindPublisher;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import org.bson.Document;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.reactivestreams.Publisher;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import static com.mongodb.client.model.Filters.eq;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -81,14 +86,10 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .assertThat()
                 .statusCode(200)
                 .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
-        //Validate MongoDB data IS UNDER DEVELOPMENT
-        MongoCollection<Document> collectionMain = mainDB.getCollection("log_" + (new Utils()).getTodaysDate());
-        MongoCollection<Document> collectionLogs = logDB.getCollection("startup_log");
-        System.out.println(collectionLogs);
-        FindPublisher<Document> mainDoc = collectionMain.find();
-        Flux.from(mainDoc)
-                .doOnNext(x -> System.out.println("done"));
-//        FindIterable<Document> logs = collectionLogs.find();
+        //        mainDB = mongoClientMainDB.getDatabase("CurrencyRates");
+        //        MongoCollection<Document> collectionLogs = mainDB.getCollection(currencyCode);
+//        String id = String.format("%sT00:00:00.000+00:00", pastDate);
+        //        Publisher<Long> ratesDoc = collectionLogs.countDocuments();
     }
 
     @DisplayName("Verify valid date boundary value is correctly processed by Supported Currencies endpoint.")
@@ -105,5 +106,17 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .assertThat()
                 .statusCode(200)
                 .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
+    }
+
+    @DisplayName("Verify that application logs are recorded in the database.")
+    @Test
+    public void TestLogging(){
+        String collectionName = "log_" + (new Utils()).getTodaysDate();
+        MongoCollection<Document> collectionMain = logDB.getCollection(collectionName);
+        Publisher<Long> countMain = collectionMain.countDocuments();
+        var mainRecordsNum = Mono.from(countMain)
+                .block();
+        Assertions.assertNotNull(mainRecordsNum, "The number of records is null. It should be > 0.");
+        Assertions.assertTrue(mainRecordsNum.intValue() > 0, "There should be more than 0 records in Logs.");
     }
 }
