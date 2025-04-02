@@ -120,12 +120,11 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .then()
                 .assertThat()
                 .statusCode(400)
-                // to update body should be: {"error": "Date is not in the past."}
-                .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
+                .body("error", equalTo("Date is not in the past."));
     }
 
 
-    @DisplayName("Verify that Supported Currencies With Future Dates endpoint returns error")
+    @DisplayName("Verify that Supported Currencies With Future Dates endpoint returns error.")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrenciesWithFutureDates.csv")
     public void TestGetCurrencyEndpointNegative(String currencyCode, String pastDate) {
@@ -138,8 +137,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .then()
                 .assertThat()
                 .statusCode(400)
-                // to update body should be: {"error": "Date is not in the past."}
-                .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
+                .body("error", equalTo("Date is not in the past."));;
     }
 
     @DisplayName("Verify that application logs are recorded in the database.")
