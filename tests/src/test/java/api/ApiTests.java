@@ -108,6 +108,40 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
     }
 
+    @ParameterizedTest
+    @CsvFileSource(resources = "SupportedCurrencies.csv")
+    public void TestGetCurrencyEndpointTodaysDate(String currencyCode) {
+        //Send request
+        var response = given()
+                .when()
+                .get(CURRENCY_RATES_ENDPOINT, currencyCode, (new Utils()).getTodaysDate());
+        //Validate response
+        response
+                .then()
+                .assertThat()
+                .statusCode(400)
+                // to update body should be: {"error": "Date is not in the past."}
+                .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
+    }
+
+
+    @DisplayName("Verify that Supported Currencies With Future Dates endpoint returns error")
+    @ParameterizedTest
+    @CsvFileSource(resources = "SupportedCurrenciesWithFutureDates.csv")
+    public void TestGetCurrencyEndpointNegative(String currencyCode, String pastDate) {
+        //Send request
+        var response = given()
+                .when()
+                .get(CURRENCY_RATES_ENDPOINT, currencyCode, pastDate);
+        //Validate response
+        response
+                .then()
+                .assertThat()
+                .statusCode(400)
+                // to update body should be: {"error": "Date is not in the past."}
+                .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
+    }
+
     @DisplayName("Verify that application logs are recorded in the database.")
     @Test
     public void TestLogging(){
