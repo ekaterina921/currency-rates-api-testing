@@ -2,7 +2,6 @@ package api;
 
 import Utilities.Utils;
 
-import com.mongodb.reactivestreams.client.FindPublisher;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
@@ -12,10 +11,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.reactivestreams.Publisher;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static com.mongodb.client.model.Filters.eq;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -137,7 +134,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .then()
                 .assertThat()
                 .statusCode(400)
-                .body("error", equalTo("Date is not in the past."));;
+                .body("error", equalTo("Date is not in the past."));
     }
 
     @DisplayName("Verify that application logs are recorded in the database.")
