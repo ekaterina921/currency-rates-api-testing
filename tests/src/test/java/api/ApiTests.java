@@ -111,11 +111,13 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify that application logs are recorded in the database.")
     @Test
     public void TestLogging(){
+        //Count the number of log documents in the database
         String collectionName = "log_" + (new Utils()).getTodaysDate();
         MongoCollection<Document> collectionMain = logDB.getCollection(collectionName);
         Publisher<Long> countMain = collectionMain.countDocuments();
         var mainRecordsNum = Mono.from(countMain)
                 .block();
+        //Check that log documents exist
         Assertions.assertNotNull(mainRecordsNum, "The number of records is null. It should be > 0.");
         Assertions.assertTrue(mainRecordsNum.intValue() > 0, "There should be more than 0 records in Logs.");
     }
