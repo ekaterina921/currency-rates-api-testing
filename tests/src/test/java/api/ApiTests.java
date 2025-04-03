@@ -23,7 +23,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
 
     @DisplayName("Verify the list of supported currencies is displayed by Supported Currencies endpoint.")
     @Test
-    public void TestSupportedCurrenciesEndpoint() {
+    public void testSupportedCurrenciesEndpoint() {
         //Send request
         var response = given()
                 .when()
@@ -40,7 +40,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify that true is returned by Supported Currency endpoint in case the currency is supported")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrencies.csv")
-    public void TestSupportedCurrencyEndpointPositive(String currencyCode) {
+    public void testSupportedCurrencyEndpointPositive(String currencyCode) {
         //Send request
         var response = given()
                 .when()
@@ -56,7 +56,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify that false is returned by Supported Currency endpoint in case the currency is not supported")
     @ParameterizedTest
     @CsvFileSource(resources = "NotSupportedCurrencies.csv")
-    public void TestSupportedCurrencyEndpointNegative(String currencyCode) {
+    public void testSupportedCurrencyEndpointNegative(String currencyCode) {
         //Send request
         var response = given()
                 .when()
@@ -72,7 +72,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify that Supported Currencies With Past Dates endpoint returns the list of currency rates and saves to DB")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrenciesWithPastDates.csv")
-    public void TestGetCurrencyEndpointPositive(String currencyCode, String pastDate) {
+    public void testGetCurrencyEndpointPastDates(String currencyCode, String pastDate) {
         //Send request
         var response = given()
                 .when()
@@ -92,7 +92,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify valid date boundary value is correctly processed by Supported Currencies endpoint.")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrencies.csv")
-    public void TestGetCurrencyEndpointYesterdaysDate(String currencyCode) {
+    public void testGetCurrencyEndpointYesterdaysDate(String currencyCode) {
         //Send request
         var response = given()
                 .when()
@@ -107,7 +107,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
 
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrencies.csv")
-    public void TestGetCurrencyEndpointTodaysDate(String currencyCode) {
+    public void testGetCurrencyEndpointTodaysDate(String currencyCode) {
         //Send request
         var response = given()
                 .when()
@@ -124,7 +124,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify that Supported Currencies With Future Dates endpoint returns error.")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrenciesWithFutureDates.csv")
-    public void TestGetCurrencyEndpointNegative(String currencyCode, String pastDate) {
+    public void testGetCurrencyEndpointNegative(String currencyCode, String pastDate) {
         //Send request
         var response = given()
                 .when()
@@ -139,7 +139,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
 
     @DisplayName("Verify that application logs are recorded in the database.")
     @Test
-    public void TestLogging(){
+    public void testLogging(){
         //Count the number of log documents in the database
         String collectionName = "log_" + (new Utils()).getTodaysDate();
         MongoCollection<Document> collectionMain = logDB.getCollection(collectionName);
