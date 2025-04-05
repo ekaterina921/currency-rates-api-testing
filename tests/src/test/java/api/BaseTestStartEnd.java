@@ -83,7 +83,7 @@ public class BaseTestStartEnd {
         connectionStringLogContainer = "mongodb://MainUser:Test123!@localhost:" + mongoLogContainer.getFirstMappedPort() + "/";
         mongoClientMainDB = MongoClients.create(connectionStringMainContainer);
         mongoClientLogDB = MongoClients.create(connectionStringLogContainer);
-        mainDB = mongoClientMainDB.getDatabase("CurrencyRates");
+      
         logDB = mongoClientLogDB.getDatabase("Logging");
     }
 

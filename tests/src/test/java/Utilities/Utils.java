@@ -11,7 +11,7 @@ public class Utils {
     }
 
     public String getTodaysDate(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "uuuuMMdd" );
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "uuuu-MM-dd" );
         return ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).format(formatter);
     }
 }
