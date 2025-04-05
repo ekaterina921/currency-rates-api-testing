@@ -211,7 +211,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @Test
     public void testLogging(){
         //Count the number of log documents in the database
-        String collectionName = "log_" + (new Utils()).getTodaysDate();
+        String collectionName = "log_" + (new Utils()).getTodaysDate().replaceAll("-", "");
         MongoCollection<Document> collectionMain = logDB.getCollection(collectionName);
         Publisher<Long> countMain = collectionMain.countDocuments();
         var mainRecordsNum = Mono.from(countMain)
