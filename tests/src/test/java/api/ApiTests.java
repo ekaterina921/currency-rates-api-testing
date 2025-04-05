@@ -3,16 +3,18 @@ package api;
 import Utilities.Utils;
 
 import com.mongodb.reactivestreams.client.MongoCollection;
+import org.reactivestreams.Publisher;
 import org.bson.Document;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
-import org.reactivestreams.Publisher;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.publisher.Mono;
 
+
+import reactor.core.publisher.Mono;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -69,7 +71,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .body("isSupported", equalTo(false));
     }
 
-    @DisplayName("Verify that Supported Currencies With Past Dates endpoint returns the list of currency rates and saves to DB")
+    @DisplayName("Verify that Supported Currencies With Past Dates endpoint returns the list of currency rates")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrenciesWithPastDates.csv")
     public void testGetCurrencyEndpointPastDates(String currencyCode, String pastDate) {
@@ -83,10 +85,13 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .assertThat()
                 .statusCode(200)
                 .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
-        //        mainDB = mongoClientMainDB.getDatabase("CurrencyRates");
-        //        MongoCollection<Document> collectionLogs = mainDB.getCollection(currencyCode);
-//        String id = String.format("%sT00:00:00.000+00:00", pastDate);
-        //        Publisher<Long> ratesDoc = collectionLogs.countDocuments();
+        mainDB = mongoClientMainDB.getDatabase("CurrencyRates");
+        MongoCollection<Document> collectionLogs = mainDB.getCollection(currencyCode.toLowerCase());
+ //       String id = String.format("%s 00:00:00.000+00:00", pastDate);
+        Publisher<Long> ratesDoc = collectionLogs.countDocuments();
+        var ratesNum = Mono.from(ratesDoc).block();
+        Assertions.assertNotNull(ratesNum, "The number of currency rates is null. It should be > 0.");
+        Assertions.assertTrue(ratesNum.intValue() > 0, "There should be more than 0 records in Currency Rates.");
     }
 
     @DisplayName("Verify valid date boundary value is correctly processed by Supported Currencies endpoint.")
@@ -124,7 +129,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
     @DisplayName("Verify that Supported Currencies With Future Dates endpoint returns error.")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrenciesWithFutureDates.csv")
-    public void testGetCurrencyEndpointNegative(String currencyCode, String pastDate) {
+    public void testGetCurrencyEndpointFutureDates(String currencyCode, String pastDate) {
         //Send request
         var response = given()
                 .when()
