@@ -145,6 +145,7 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
                 .body(matchesJsonSchemaInClasspath("api/Json_Schema_Currency_Rates.json"));
     }
 
+    @DisplayName("Verify invalid date boundary value is correctly processed by Supported Currencies endpoint.")
     @ParameterizedTest
     @CsvFileSource(resources = "SupportedCurrencies.csv")
     public void testGetCurrencyEndpointTodaysDate(String currencyCode) {
