@@ -6,6 +6,7 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.reactivestreams.Publisher;
 import org.bson.Document;
+import static com.mongodb.client.model.Filters.eq;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,9 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import java.time.Instant;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -97,6 +101,11 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
         var ratesNum = Mono.from(ratesDoc).block();
         Assertions.assertNotNull(ratesNum, "The number of currency rates is null. It should be > 0.");
         Assertions.assertTrue(ratesNum > beforeRatesNum, "There should be more records in Currency Rates database.");
+        Instant dateTime = (new Utils()).reformatDateForMongoSearch(pastDate);
+        Mono<Document> foundDocument = Mono.from(collectionLogs.find(eq("_id", dateTime)));
+        StepVerifier.create(foundDocument) // Using StepVerifier from Reactor for reactive testing
+                .expectNextCount(1) // Expect one document
+                .verifyComplete();
     }
 
     @DisplayName("Verify that duplicates are not saved in the Currency Rates database.")
@@ -127,6 +136,11 @@ public class ApiTests extends BaseTestStartEnd implements EndpointsList {
         var ratesNum = Mono.from(ratesDoc).block();
         Assertions.assertNotNull(ratesNum, "The number of currency rates is null. It should be > 0.");
         Assertions.assertEquals(ratesNum, beforeRatesNum, "The number of records shouldn't have changed in Currency Rates database.");
+        Instant dateTime = (new Utils()).reformatDateForMongoSearch(pastDate);
+        Mono<Document> foundDocument = Mono.from(collectionLogs.find(eq("_id", dateTime)));
+        StepVerifier.create(foundDocument) // Using StepVerifier from Reactor for reactive testing
+                .expectNextCount(1) // Expect one document
+                .verifyComplete();
     }
 
     @DisplayName("Verify valid date boundary value is correctly processed by Supported Currencies endpoint.")
